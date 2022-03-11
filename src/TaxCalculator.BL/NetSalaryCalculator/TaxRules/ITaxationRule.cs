@@ -1,7 +1,12 @@
-﻿namespace SalaryCalculator.Logic.Rules
+﻿namespace TaxCalculator.BL.NetSalaryCalculator.TaxRules
 {
     public interface ITaxationRule
     {
+        /// <summary>
+        /// Name of the taxs
+        /// </summary>
+        string Name { get; }
+
         /// <summary>
         /// Get tax for given salary.
         /// </summary>

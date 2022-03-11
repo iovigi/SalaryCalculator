@@ -1,28 +1,17 @@
-﻿namespace SalaryCalculator.Logic.Rules
-{
-    using System;
+﻿using System;
 
-    public class SocialContributionTaxationRule : ITaxationRule
+namespace TaxCalculator.BL.NetSalaryCalculator.TaxRules
+{
+    public class IncomeTaxationRule : ITaxationRule
     {
         private readonly decimal belowTaxSalaryLevel;
-        private readonly decimal higherSalaryLevel;
         private readonly decimal calculatedPercentPerSalary;
 
-        public SocialContributionTaxationRule(decimal belowTaxSalaryLevel, decimal higherSalaryLevel, int percentPerSalary)
+        public IncomeTaxationRule(decimal belowTaxSalaryLevel, int percentPerSalary)
         {
             if (belowTaxSalaryLevel < 0)
             {
                 throw new ArgumentException("below tax salary level can't be lower than 0");
-            }
-
-            if (higherSalaryLevel < 0)
-            {
-                throw new ArgumentException("higher salary level can't be lower than 0");
-            }
-
-            if(belowTaxSalaryLevel > higherSalaryLevel)
-            {
-                throw new ArgumentException("higher salary level can't be lower than below tax salary level");
             }
 
             if (percentPerSalary < 0 || percentPerSalary > 100)
@@ -31,9 +20,10 @@
             }
 
             this.belowTaxSalaryLevel = belowTaxSalaryLevel;
-            this.higherSalaryLevel = higherSalaryLevel;
             this.calculatedPercentPerSalary = ((decimal)percentPerSalary) / 100;
         }
+
+        public string Name => "IncomeTax";
 
         public decimal CalculateTax(decimal grossSalary)
         {
@@ -47,14 +37,7 @@
                 return 0m;
             }
 
-            decimal taxableSalary = grossSalary;
-
-            if(taxableSalary > this.higherSalaryLevel)
-            {
-                taxableSalary = this.higherSalaryLevel;
-            }
-
-            decimal tax = (taxableSalary - this.belowTaxSalaryLevel) * this.calculatedPercentPerSalary;
+            decimal tax = (grossSalary - this.belowTaxSalaryLevel) * this.calculatedPercentPerSalary;
 
             return tax;
         }
